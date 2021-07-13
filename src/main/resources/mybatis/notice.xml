@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace = "dev.mvc.notice.NoticeDAOInter">
+
+
+ <!-- 카테고리별 검색 레코드 갯수 -->
+  <select id="search_count" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt
+    FROM notice
+  </select>
+
+
+  <select id="list_notice_paging" 
+             resultType="dev.mvc.notice.NoticeVO" parameterType="HashMap">
+   SELECT noticeno, title, rdate, r
+   FROM (
+              SELECT noticeno, title, rdate, rownum as r
+              FROM (
+                        SELECT noticeno, title, rdate
+                        FROM notice
+                        ORDER BY noticeno DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+<!--  1 page: WHERE r >= 1 AND r <= 10; 
+       2 page: WHERE r >= 11 AND r <= 20;
+       3 page: WHERE r >= 21 AND r <= 30; -->
+     
+  </select>
+  
+    <select id="read" resultType="dev.mvc.notice.NoticeVO" parameterType="int">
+    SELECT n.noticeno, n.title, n.ncontent ,n.rdate,a.name
+    FROM notice n, admin a
+    where n.noticeno=#{noticeno} AND n.adminno=a.adminno
+    </select>
+  
+  <!-- 삭제 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM notice
+    WHERE noticeno=#{noticeno}
+  </delete>
+  
+  <insert id="create" parameterType="dev.mvc.notice.NoticeVO">
+    INSERT INTO notice(noticeno, title, ncontent, rdate, adminno)
+    VALUES(notice_seq.nextval,  #{title}, #{ncontent}, sysdate,#{adminno})
+  </insert>
+  
+  
+</mapper>
