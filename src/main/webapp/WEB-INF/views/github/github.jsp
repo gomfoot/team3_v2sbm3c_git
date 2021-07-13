@@ -5,7 +5,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title></title>
+<title>http://127.0.0.1:9091/github/github.jsp</title>
 <link href="../css/style.css" rel="Stylesheet" type="text/css">
 
 <script type="text/JavaScript"
