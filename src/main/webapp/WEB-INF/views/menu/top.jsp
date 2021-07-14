@@ -20,7 +20,7 @@
           <span>&nbsp;</span> 
           <A class='menu_link'  href='/cate/list_all_join.do' style=" text-decoration: none; ">찜 컨텐츠 </A>                 
           <span>&nbsp;</span> 
-          <A class='menu_link'  href='/cart/list_by_memberno.do' style=" text-decoration: none; ">커뮤니티 </A>
+          <A class='menu_link'  href='/mboard/list_all.do' style=" text-decoration: none; ">커뮤니티 </A>
           <span>&nbsp;</span> 
           <A class='menu_link'  href='/cart/list_by_memberno.do' style=" text-decoration: none; ">qna </A>
           <span>&nbsp;</span> 
