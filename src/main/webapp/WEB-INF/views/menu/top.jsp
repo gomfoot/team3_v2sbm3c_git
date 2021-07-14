@@ -4,14 +4,21 @@
   <%-- 화면 상단 메뉴 --%>
   <DIV style="font-size:2.2em; background-color:#000000; color:white;">
       <span style='padding-left: 0.5%;'></span>
-      <A style="line-height:50px; float:left;" href='/' >넨플릭스</A>
+      <A style=" float:left;" href='/' >넨플릭스</A>
       <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
       <c:choose>
         <c:when test="${sessionScope.id == null}"> <%-- 로그인 안 한 경 우 --%>
           <A  href='/member/login.do'  style=" text-decoration: none; ">Login </A>
         </c:when>
         <c:otherwise>
-          <A  href='/member/read.do?memberno=${sessionScope.memberno }' style=" text-decoration: none; ">${sessionScope.id }</A> 
+           <c:choose>
+              <c:when test="${sessionScope.grade =='admin'}"> <%-- 로그인 안 한 경 우 --%>
+                    ${sessionScope.id }
+              </c:when>
+              <c:otherwise>
+                    <A  href='/member/read.do?memberno=${sessionScope.memberno }' style=" text-decoration: none; ">${sessionScope.id }</A> 
+              </c:otherwise>      
+            </c:choose>    
           <A  href='/member/logout.do'  style=" text-decoration: none; ">Logout </A>
           <span>&nbsp;</span>   
           <A  href='/categrp/list.do' style=" text-decoration: none; "> 장르 </A> 
