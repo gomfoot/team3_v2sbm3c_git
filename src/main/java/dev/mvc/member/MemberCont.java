@@ -65,6 +65,19 @@ public class MemberCont {
     return json.toString(); 
   }
   
+  @ResponseBody
+  @RequestMapping(value="/member/membercheck.do", method=RequestMethod.GET )
+  public String membercheck(String id,String passwd) {
+    HashMap<Object, Object> map = new HashMap<Object, Object>();
+    map.put("id", id);
+    map.put("passwd", passwd);
+    int cnt = this.memberProc.membercheck(map);
+    JSONObject json = new JSONObject();
+    json.put("cnt", cnt);
+   
+    return json.toString(); 
+  }
+  
   // http://localhost:9091/member/create.do
   /**
   * 등록 폼
@@ -86,8 +99,6 @@ public class MemberCont {
   @RequestMapping(value="/member/create.do", method=RequestMethod.POST)
   public ModelAndView create(MemberVO memberVO){
     ModelAndView mav = new ModelAndView();
-    
-    // System.out.println("id: " + memberVO.getId());
     
     
     int cnt= memberProc.create(memberVO);
@@ -121,20 +132,15 @@ public class MemberCont {
   * @return
   */
   @RequestMapping(value="/member/list.do", method=RequestMethod.GET)
-  public ModelAndView list(HttpSession session) {
+  public ModelAndView list() {
     ModelAndView mav = new ModelAndView();
     
-    if (this.memberProc.isAdmin(session)) {
+   
       List<MemberVO> list = memberProc.list();
       mav.addObject("list", list);
 
       mav.setViewName("/member/list"); // /webapp/WEB-INF/views/member/list.jsp
-     
-    } else {
-      mav.addObject("url", "login_need"); // login_need.jsp, redirect parameter 적용
-      
-      mav.setViewName("redirect:/member/msg.do");      
-    }
+
     
     
     return mav;
@@ -156,29 +162,6 @@ public class MemberCont {
     return mav; // forward
   }
   
-  /**
-   * Ajax 기반 회원 조회
-   * http://localhost:9091/member/read_ajax.do
-   * {"rname":"왕눈이","raddress2":"관철동","rzipcode":"12345","raddress1":"서울시 종로구","rtel":"000-0000-0000"}
-   * @param memberno
-   * @return
-   */
-  @RequestMapping(value="/member/read_ajax.do", method=RequestMethod.GET)
-  @ResponseBody
-  public String read_ajax(HttpSession session){
-    int memberno = (int)session.getAttribute("memberno");
-    
-    MemberVO memberVO = this.memberProc.read(memberno);
-    
-    JSONObject json = new JSONObject();
-    json.put("rname", memberVO.getMname());
-    json.put("rtel", memberVO.getTel());
-    json.put("rzipcode", memberVO.getZipcode());
-    json.put("raddress1", memberVO.getAddress1());
-    json.put("raddress2", memberVO.getAddress2());
-    
-    return json.toString();
-  }
   
   
   /**
@@ -193,11 +176,9 @@ public class MemberCont {
     // System.out.println("id: " + memberVO.getId());
     
     int cnt= memberProc.update(memberVO);
-    mav.addObject("cnt", cnt); // redirect parameter 적용
-    mav.addObject("memberno", memberVO.getMemberno()); // redirect parameter 적용
-    mav.addObject("url", "update_msg"); // update_msg.jsp, redirect parameter 적용
+    mav.addObject("url", "index"); // update_msg.jsp, redirect parameter 적용
 
-    mav.setViewName("redirect:/member/msg.do");
+    mav.setViewName("redirect:/index.do");
     
     return mav;
   }
@@ -285,53 +266,7 @@ public class MemberCont {
     
     return mav;
   }
-  
-//  /**
-//   * 로그인 폼
-//   * @return
-//   */
-//   http://localhost:9091/member/login.do 
-//  @RequestMapping(value = "/member/login.do", 
-//                             method = RequestMethod.GET)
-//  public ModelAndView login() {
-//    ModelAndView mav = new ModelAndView();
-//  
-//    mav.setViewName("/member/login_form");
-//    return mav;
-//  }
 
-//  /**
-//   * 로그인 처리
-//   * @return
-//   */
-//   http://localhost:9091/member/login.do 
-//  @RequestMapping(value = "/member/login.do", 
-//                             method = RequestMethod.POST)
-//  public ModelAndView login_proc(HttpSession session,
-//                                                   String id, 
-//                                                   String passwd) {
-//    ModelAndView mav = new ModelAndView();
-//    Map<String, Object> map = new HashMap<String, Object>();
-//    map.put("id", id);
-//    map.put("passwd", passwd);
-//    
-//    int count = memberProc.login(map); // id, passwd 일치 여부 확인
-//    if (count == 1) { // 로그인 성공
-//      // System.out.println(id + " 로그인 성공");
-//      MemberVO memberVO = memberProc.readById(id); // 로그인한 회원의 정보 조회
-//      session.setAttribute("memberno", memberVO.getMemberno());
-//      session.setAttribute("id", id);
-//      session.setAttribute("mname", memberVO.getMname());
-//      
-//      mav.setViewName("redirect:/index.do"); // 시작 페이지로 이동  
-//    } else {
-//      mav.addObject("url", "login_fail_msg"); // login_fail_msg.jsp, redirect parameter 적용
-//     
-//      mav.setViewName("redirect:/member/msg.do"); // 새로고침 방지
-//    }
-//        
-//    return mav;
-//  }
   
   /**
    * 로그아웃 처리
@@ -516,7 +451,6 @@ public class MemberCont {
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("id", id);
     map.put("passwd", passwd);
-    System.out.println("로그인 진입");
     int count = memberProc.admin_login(map);
     if (count == 1) { // 로그인 성공
       // System.out.println(id + " 로그인 성공");
@@ -582,105 +516,7 @@ public class MemberCont {
     return mav;
   }
   
-  /**
-   * Cookie + Ajax 기반 로그인 처리
-   * @param request Cookie를 읽기위해 필요
-   * @param response Cookie를 쓰기위해 필요
-   * @param session 로그인 정보를 메모리에 기록
-   * @param id  회원 아이디
-   * @param passwd 회원 패스워드
-   * @param id_save 회원 아이디 Cookie에 저장 여부
-   * @param passwd_save 패스워드 Cookie에 저장 여부
-   * @return
-   */
-  // http://localhost:9091/member/login_ajax.do 
-  @RequestMapping(value = "/member/login_ajax.do", 
-                             method = RequestMethod.POST)
-  @ResponseBody
-  public String login_cookie_proc_ajax (
-                             HttpServletRequest request,
-                             HttpServletResponse response,
-                             HttpSession session,
-                             String id, String passwd,
-                             @RequestParam(value="id_save", defaultValue="") String id_save,
-                             @RequestParam(value="passwd_save", defaultValue="") String passwd_save) {
-
-    Map<String, Object> map = new HashMap<String, Object>();
-    map.put("id", id);
-    map.put("passwd", passwd);
-    
-    int count = memberProc.login(map);
-    if (count == 1) { // 로그인 성공
-      // System.out.println(id + " 로그인 성공");
-      MemberVO memberVO = memberProc.readById(id);
-      session.setAttribute("memberno", memberVO.getMemberno()); // 서버의 메모리에 기록
-      session.setAttribute("id", id);
-      session.setAttribute("mname", memberVO.getMname());
-      
-      // -------------------------------------------------------------------
-      // id 관련 쿠기 저장
-      // -------------------------------------------------------------------
-      if (id_save.equals("Y")) { // id를 저장할 경우, Checkbox를 체크한 경우
-        Cookie ck_id = new Cookie("ck_id", id);
-        ck_id.setMaxAge(60 * 60 * 72 * 10); // 30 day, 초단위
-        response.addCookie(ck_id); // id 저장
-      } else { // N, id를 저장하지 않는 경우, Checkbox를 체크 해제한 경우
-        Cookie ck_id = new Cookie("ck_id", "");
-        ck_id.setMaxAge(0);
-        response.addCookie(ck_id); // id 저장
-      }
-      // id를 저장할지 선택하는  CheckBox 체크 여부
-      Cookie ck_id_save = new Cookie("ck_id_save", id_save);
-      ck_id_save.setMaxAge(60 * 60 * 72 * 10); // 30 day
-      response.addCookie(ck_id_save);
-      // -------------------------------------------------------------------
-
-      // -------------------------------------------------------------------
-      // Password 관련 쿠기 저장
-      // -------------------------------------------------------------------
-      if (passwd_save.equals("Y")) { // 패스워드 저장할 경우
-        Cookie ck_passwd = new Cookie("ck_passwd", passwd);
-        ck_passwd.setMaxAge(60 * 60 * 72 * 10); // 30 day
-        response.addCookie(ck_passwd);
-      } else { // N, 패스워드를 저장하지 않을 경우
-        Cookie ck_passwd = new Cookie("ck_passwd", "");
-        ck_passwd.setMaxAge(0);
-        response.addCookie(ck_passwd);
-      }
-      // passwd를 저장할지 선택하는  CheckBox 체크 여부
-      Cookie ck_passwd_save = new Cookie("ck_passwd_save", passwd_save);
-      ck_passwd_save.setMaxAge(60 * 60 * 72 * 10); // 30 day
-      response.addCookie(ck_passwd_save);
-      // -------------------------------------------------------------------
-      
-    }
-    
-    int cnt = count;
-    
-    JSONObject json = new JSONObject();
-    json.put("cnt", cnt);
-   
-    return json.toString(); 
-  }
-  
-  
-  /**
-   * Session test
-   * http://localhost:9091/member/session.do
-   * @param session
-   * @return
-   */
-  @RequestMapping(value="/member/session.do", 
-                             method=RequestMethod.GET)
-  public ModelAndView session(HttpSession session){
-    ModelAndView mav = new ModelAndView();
-    
-    mav.addObject("url", "session");
-    mav.setViewName("redirect:/member/msg.do"); 
-    
-    return mav;
-  }
-
+ 
 }
 
 

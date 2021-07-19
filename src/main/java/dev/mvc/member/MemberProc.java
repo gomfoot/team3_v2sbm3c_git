@@ -20,17 +20,21 @@ public class MemberProc implements MemberProcInter {
 
   @Override
   public int checkID(String id) {
-    // this.memberDAO.hashCode();
     int cnt = this.memberDAO.checkID(id);
     return cnt;
   }
 
   @Override
   public int admincheck(HashMap<Object, Object> map) {
-    // this.memberDAO.hashCode();
     int cnt = this.memberDAO.admincheck(map);
     return cnt;
   }
+  
+  @Override
+  public int membercheck(HashMap<Object, Object> map) {
+    int cnt = this.memberDAO.membercheck(map);
+    return cnt;
+  }  
   
   @Override
   public int create(MemberVO memberVO) {
@@ -123,7 +127,8 @@ public class MemberProc implements MemberProcInter {
   public int adminno(String id) {
     int adminno = this.memberDAO.adminno(id);
     return adminno;
-  }  
+  }
+
   
 }
 

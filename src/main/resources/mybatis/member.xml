@@ -16,6 +16,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     WHERE id=#{id} AND passwd=#{passwd}
   </select>
   
+  <select id="membercheck" parameterType="HashMap" resultType="int">
+    SELECT COUNT(id) as cnt
+    FROM member
+    WHERE id=#{id} AND passwd=#{passwd}
+  </select>
+  
     <select id="adminno" parameterType="String" resultType="int">
     SELECT adminno
     FROM admin
@@ -36,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   </insert>
   
   <select id="list" resultType="dev.mvc.member.MemberVO">
-    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, genre1,genre2
+    SELECT memberno, id, mname, tel, address1, mdate, genre1,genre2
     FROM member
     ORDER BY memberno ASC
   </select>
@@ -57,8 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
   <update id="update" parameterType="dev.mvc.member.MemberVO">
     UPDATE member 
-    SET mname=#{mname}, tel=#{tel}, zipcode=#{zipcode},
-          address1=#{address1}, address2=#{address2}
+    SET mname=#{mname}, tel=#{tel}, zipcode=#{zipcode}, address1=#{address1}, address2=#{address2} ,genre1=#{genre1},genre2=#{genre2}
     WHERE memberno=#{memberno}
   </update>
   

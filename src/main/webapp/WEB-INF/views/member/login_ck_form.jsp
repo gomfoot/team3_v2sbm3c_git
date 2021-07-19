@@ -18,16 +18,73 @@
 
 <script type="text/javascript">
 	  $(function() { // 자동 실행
-		    $('#admin_send').on('click', send); 
+		    $('#admin_send').on('click', admin_send); 
+		    $('#member_send').on('click', member_send);
 		  });
-		    
-	  function submit2(frm){
-		  frm.action='/member/admin_login.do';
-      frm.submit();
-      return true;
 
-	  }
-	  function send() {
+
+
+
+    function member_send() {
+          var frm = $('#frm');  // id가 frm인 태그 검색
+          var id = $('#id',frm).val(); // frm 폼에서 id가 'id'인 태그 검색
+          var passwd=$('#passwd',frm).val();
+          var params = '';
+          var msg = '';
+
+          if ($.trim(id).length == 0) { // id를 입력받지 않은 경우
+            msg = '· ID를 입력하세요.';
+            
+            $('#modal_content').attr('class', 'alert alert-danger'); // Bootstrap CSS 변경
+            $('#modal_title').html('ID 확인'); // 제목 
+            $('#modal_content').html(msg);        // 내용
+            $('#btn_close').attr("data-focus", "id");  // 닫기 버튼 클릭시 id 입력으로 focus 이동
+            $('#modal_panel').modal();               // 다이얼로그 출력
+            return false;
+          } else {  // when ID is entered
+            params = 'id=' + id;
+            params+='&passwd='+passwd;
+            // var params = $('#frm').serialize(); // 직렬화, 폼의 데이터를 키와 값의 구조로 조합
+            // alert('params: ' + params);
+
+            $.ajax({
+              url: './membercheck.do', // spring execute
+              type: 'get',  // post
+              cache: false, // 응답 결과 임시 저장 취소
+              async: true,  // true: 비동기 통신
+              dataType: 'json', // 응답 형식: json, html, xml...
+              data: params,      // 데이터
+              success: function(rdata) { // 서버로부터 성공적으로 응답이 온경우
+                // alert(rdata);
+                var msg = "";
+                
+                if (rdata.cnt>0) {
+                  $('#frm').submit();
+                } else {
+                  $('#modal_content').attr('class', 'alert alert-success'); // Bootstrap CSS 변경
+                  msg = "정보를 잘못 입력하셨습니다.";
+                  $('#btn_close').attr("data-focus", "id");  // passwd 입력으로 focus 이동
+                  // $.cookie('checkId', 'TRUE'); // Cookie 기록
+                }
+                
+                $('#modal_title').html('정보  확인'); // 제목 
+                $('#modal_content').html(msg);        // 내용
+                $('#modal_panel').modal();              // 다이얼로그 출력
+              },
+              // Ajax 통신 에러, 응답 코드가 200이 아닌경우, dataType이 다른경우 
+              error: function(request, status, error) { // callback 함수
+                console.log(error);
+              }
+            });
+        }
+      }
+
+
+
+
+
+		    
+	  function admin_send() {
         var frm = $('#frm');  // id가 frm인 태그 검색
         var id = $('#id',frm).val(); // frm 폼에서 id가 'id'인 태그 검색
         var passwd=$('#passwd',frm).val();
@@ -141,7 +198,7 @@
    
       <div class="form-group">
         <div class="col-md-offset-4 col-md-8">
-          <button type="submit" class="btn btn-primary btn-md">로그인</button>
+          <button type="button" id='member_send' class="btn btn-primary btn-md">로그인</button>
           <button type='button' onclick="location.href='./create.do'" class="btn btn-primary btn-md">회원가입</button>
           <button type='button' id='admin_send' class="btn btn-primary btn-md">관리자 로그인</button>
         </div>

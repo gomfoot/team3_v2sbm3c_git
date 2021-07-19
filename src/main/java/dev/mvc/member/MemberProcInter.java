@@ -22,6 +22,13 @@ public interface MemberProcInter {
   public int admincheck(HashMap<Object, Object> map);
   
   /**
+   * member 검사
+   * @param id,passwd
+   * @return 중복 member 갯수
+   */
+  public int membercheck(HashMap<Object, Object> map);
+  
+  /**
    * 회원 가입
    * @param memberVO
    * @return

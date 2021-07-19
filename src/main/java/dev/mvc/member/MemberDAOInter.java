@@ -17,6 +17,12 @@ public interface MemberDAOInter {
    * @return 중복 admin 갯수
    */
   public int admincheck(HashMap<Object, Object> map);
+  /**
+   * member 검사
+   * @param id,passwd
+   * @return 중복 member 갯수
+   */
+  public int membercheck(HashMap<Object, Object> map);
   
   /**
    * 회원 가입
@@ -83,6 +89,9 @@ public interface MemberDAOInter {
    */
   public int admin_login(Map<String, Object> map);
 
+  /**
+   * adminno 번호 가져오기
+   */
   public int adminno(String id);
 }
 

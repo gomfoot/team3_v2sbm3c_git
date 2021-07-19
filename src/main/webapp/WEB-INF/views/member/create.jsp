@@ -243,8 +243,7 @@
 
     <div class="form-group">
       <div class="col-md-12">
-      
-
+        
       <label for="genre1" class="col-md-2 control-label" style='font-size: 0.9em;'>장르 1</label>    
       <div class="col-md-10">
         <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="액션" > 액션</label>&nbsp;&nbsp;
@@ -252,6 +251,7 @@
         <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="로맨스"> 로맨스</label>&nbsp;&nbsp;
         <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="호러"> 호러</label>&nbsp;&nbsp;
         <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="sf판타지"> sf판타지</label>&nbsp;&nbsp;
+          
       </div>
 
       <label for="genre2" class="col-md-2 control-label" style='font-size: 0.9em;'>장르 2</label>    

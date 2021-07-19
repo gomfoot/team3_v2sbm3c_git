@@ -18,63 +18,68 @@
  
 <script type="text/javascript">
   $(function(){
- 
+	  $('input:radio[name=genre1]:input[value="${memberVO.genre1}"]').attr("checked", true);
+	  $('input:radio[name=genre2]:input[value="${memberVO.genre2}"]').attr("checked", true);
+	  $('#btn_update').on('click', update); 
   });
+
+  function update() { // 회원 update 처리
+	    var genre1 = $('input:radio[name="genre1"]:checked').val();
+	    var genre2 = $('input:radio[name="genre2"]:checked').val();
+	    if(genre1==genre2){
+	        msg = '입력된 장르가 같습니다.<br>';
+	        msg+='다르게 선택해 주세요<br>';
+	        msg+=$('#genre1').val();
+	        msg+= $('#genre2').val();
+	        $('#modal_content').attr('class', 'alert alert-danger'); // CSS 변경
+	        $('#modal_title').html('장르 일치 확인'); // 제목 
+	        $('#modal_content').html(msg);  // 내용
+	        $('#modal_panel').modal();         // 다이얼로그 출력
+	        return false;
+	        
+	    }
+	    $('#frm').submit();
+	  }
+  
 </script>
 </head> 
  
-<body>
+<body style="background-color:#000000; color:white;">
 <jsp:include page="../menu/top.jsp" flush='false' />
-
-<DIV class='title_line'>
-  회원 정보 조회 및 수정
-</DIV>
-
-<DIV class='content_body'>    
-  <ASIDE class="aside_right">
-    <A href="javascript:location.reload();">새로고침</A>
-    <span class='menu_divide' >│</span> 
-    <A href='./create.do'>회원 가입</A>
-    <span class='menu_divide' >│</span> 
-    <A href='./list.do'>목록</A>
-  </ASIDE> 
- 
-  <div class='menu_line'></div>
-  
-  <DIV id='main_panel'></DIV>
- 
-  <!-- Modal -->
-  <div class="modal fade" id="modal_panel" role="dialog">
+ <!-- ******************** Modal 알림창 시작 ******************** -->
+  <div id="modal_panel" class="modal fade"  role="dialog">
     <div class="modal-dialog">
-    
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">×</button>
-          <h4 class="modal-title" id='modal_title'></h4> <!-- 제목 -->
+          <h4 class="modal-title" id='modal_title'></h4><!-- 제목 -->
         </div>
         <div class="modal-body">
-          <p id='modal_content'></p> <!-- 내용 -->
+          <p id='modal_content'></p>  <!-- 내용 -->
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" id="btn_close" data-focus="" class="btn btn-default" 
+                      data-dismiss="modal">닫기</button>
         </div>
       </div>
-      
     </div>
-  </div> <!-- Modal END -->
+  </div>
+  <!-- ******************** Modal 알림창 종료 ******************** -->
     
-  <FORM name='frm' id='frm' method='POST' action='./update.do' 
-              onsubmit="return send();" class="form-horizontal">
+  <FORM name='frm' id='frm' method='POST' action='./update.do' class="form-horizontal">
     <input type='hidden' name='memberno' id='memberno' value='${memberVO.memberno }'>          
-    <input type="hidden" name="${ _csrf.parameterName }" value="${ _csrf.token }">
+    <div class="form-group">
+      <label class="col-md-2 control-label" style='font-size: 0.9em;'></label>    
+      <div class="col-md-10"> 
+      </div>
+    </div>  
     <div class="form-group">
       <label class="col-md-2 control-label" style='font-size: 0.9em;'>아이디</label>    
       <div class="col-md-10">
         ${memberVO.id } (변경 불가능 합니다.)       
       </div>
-    </div>   
-                
+    </div>             
     <div class="form-group">
       <label class="col-md-2 control-label" style='font-size: 0.9em;'>성명</label>    
       <div class="col-md-10">
@@ -116,6 +121,24 @@
                    value='${memberVO.address2 }' required="required" style='width: 80%;' placeholder="상세 주소">
       </div>
     </div>   
+    
+    <label for="genre1" class="col-md-2 control-label" style='font-size: 0.9em;'>관심 장르 1</label>    
+      <div class="col-md-10">
+        <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="액션" > 액션</label>&nbsp;&nbsp;
+        <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="코미디"> 코미디</label>&nbsp;&nbsp;
+        <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="로맨스"> 로맨스</label>&nbsp;&nbsp;
+        <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="호러"> 호러</label>&nbsp;&nbsp;
+        <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="sf판타지"> sf판타지</label>&nbsp;&nbsp;
+      </div>
+
+      <label for="genre2" class="col-md-2 control-label" style='font-size: 0.9em;'>관심 장르 2</label>    
+      <div class="col-md-10">
+        <label style="cursor: pointer;"><input type="radio" name="genre2" id="genre2" value="액션" > 액션</label>&nbsp;&nbsp;
+        <label style="cursor: pointer;"><input type="radio" name="genre2" id="genre2" value="코미디"> 코미디</label>&nbsp;&nbsp;
+        <label style="cursor: pointer;"><input type="radio" name="genre2" id="genre2" value="로맨스"> 로맨스</label>&nbsp;&nbsp;
+        <label style="cursor: pointer;"><input type="radio" name="genre2" id="genre2" value="호러"> 호러</label>&nbsp;&nbsp;
+        <label style="cursor: pointer;"><input type="radio" name="genre2" id="genre2" value="sf판타지"> sf판타지</label>&nbsp;&nbsp;
+      </div>
  
     <div class="form-group">
       <div class="col-md-12">
@@ -193,7 +216,7 @@
     
     <div class="form-group">
       <div class="col-md-offset-2 col-md-10">
-        <button type="submit" class="btn btn-primary btn-md">저장</button>
+        <button type="button" id='btn_update'  class="btn btn-primary btn-md">저장</button>
         <button type="button" onclick="history.go(-1);" class="btn btn-primary btn-md">취소</button>
  
       </div>
