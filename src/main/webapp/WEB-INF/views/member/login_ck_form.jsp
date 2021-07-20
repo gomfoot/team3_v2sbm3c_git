@@ -120,8 +120,7 @@
               if (rdata.cnt>0) {
             	  $("#frm").attr("action", "/member/admin_login.do");
                 $('#frm').submit();
-            	  //frm.action='/member/admin_login.do';
-                //frm.submit();
+
               } else {
                 $('#modal_content').attr('class', 'alert alert-success'); // Bootstrap CSS 변경
                 msg = "관리자가 아닙니다.";

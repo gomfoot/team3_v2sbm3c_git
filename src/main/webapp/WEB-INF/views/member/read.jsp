@@ -5,9 +5,8 @@
 <head> 
 <meta charset="UTF-8"> 
 <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, width=device-width" /> 
-<title>Resort world</title>
+<title>NENFLIX</title>
  
-<link href="/css/style.css" rel="Stylesheet" type="text/css">
  
 <script type="text/JavaScript"
           src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -21,12 +20,31 @@
 	  $('input:radio[name=genre1]:input[value="${memberVO.genre1}"]').attr("checked", true);
 	  $('input:radio[name=genre2]:input[value="${memberVO.genre2}"]').attr("checked", true);
 	  $('#btn_update').on('click', update); 
+	  $('#btn_delete').on('click', member_delete); 
+	  $('#btn_agree').on('click', agree); 
   });
 
   function update() { // 회원 update 처리
+	    var frm = $('#frm');  // id가 frm인 태그 검색
+      var passwd=$('#passwd',frm).val();
+      var mname=$('#mname',frm).val();
+      var tel=$('#tel',frm).val();
+      var zipcode=$('#zipcode',frm).val();
+      var address1=$('#address1',frm).val();
+      var address2=$('#address2',frm).val();
 	    var genre1 = $('input:radio[name="genre1"]:checked').val();
 	    var genre2 = $('input:radio[name="genre2"]:checked').val();
-	    if(genre1==genre2){
+      if($.trim(passwd).length == 0||$.trim(mname).length == 0||$.trim(tel).length == 0||$.trim(zipcode).length == 0||$.trim(address1).length == 0||$.trim(address2).length == 0){
+    	    msg = '입력 안하신 정보가 존재합니다.<br>';
+          msg+='전부 입력해주세요<br>';
+          $('#modal_content').attr('class', 'alert alert-danger'); // CSS 변경
+          $('#modal_title').html('정보 부재'); // 제목 
+          $('#modal_content').html(msg);  // 내용
+          $('#modal_panel').modal();         // 다이얼로그 출력
+          return false;
+          }
+      
+      else if(genre1==genre2){
 	        msg = '입력된 장르가 같습니다.<br>';
 	        msg+='다르게 선택해 주세요<br>';
 	        msg+=$('#genre1').val();
@@ -37,10 +55,27 @@
 	        $('#modal_panel').modal();         // 다이얼로그 출력
 	        return false;
 	        
-	    }
+	    }else{
 	    $('#frm').submit();
+      }
 	  }
-  
+  function member_delete() { // 회원 update 처리
+	  
+	    msg = '회원 정보를 삭제합니다.<br>';
+      msg+='정말 삭제 하시겠습니까?<br>';
+      $('#modal_content').attr('class', 'alert alert-danger'); // CSS 변경
+      $('#modal_title').html('정보 부재'); // 제목 
+      $('#modal_content').html(msg);  // 내용
+      $('#modal_panel').modal();         // 다이얼로그 출력
+      return false;
+      
+
+    }
+  function agree() { // 회원 update 처리
+	    $("#frm").attr("action", "/member/delete.do");
+      $('#frm').submit();
+      }
+    
 </script>
 </head> 
  
@@ -58,7 +93,10 @@
         <div class="modal-body">
           <p id='modal_content'></p>  <!-- 내용 -->
         </div>
+
         <div class="modal-footer">
+          <button type="button" id="btn_agree" data-focus="" class="btn btn-default" 
+                      data-dismiss="modal">확인</button>
           <button type="button" id="btn_close" data-focus="" class="btn btn-default" 
                       data-dismiss="modal">닫기</button>
         </div>
@@ -79,18 +117,24 @@
       <div class="col-md-10">
         ${memberVO.id } (변경 불가능 합니다.)       
       </div>
-    </div>             
+    </div>           
     <div class="form-group">
-      <label class="col-md-2 control-label" style='font-size: 0.9em;'>성명</label>    
+      <label class="col-md-2 control-label" style='font-size: 0.9em;'>비밀번호*</label>    
+      <div class="col-md-10">
+        <input type='password' class="form-control" name='passwd' id='passwd' 
+                   value=''required="required" autofocus="autofocus" style='width: 30%;' placeholder="비밀번호">
+      </div>
+    </div>     
+    <div class="form-group">
+      <label class="col-md-2 control-label" style='font-size: 0.9em;'>성명*</label>    
       <div class="col-md-10">
         <input type='text' class="form-control" name='mname' id='mname' 
-                   value='${memberVO.mname }' required="required" autofocus="autofocus" 
-                   style='width: 30%;' placeholder="성명">
+                   value='${memberVO.mname }' required="required" style='width: 30%;' placeholder="성명">
       </div>
     </div>   
  
     <div class="form-group">
-      <label class="col-md-2 control-label" style='font-size: 0.9em;'>전화번호</label>    
+      <label class="col-md-2 control-label" style='font-size: 0.9em;'>전화번호*</label>    
       <div class="col-md-10">
         <input type='text' class="form-control" name='tel' id='tel' 
                    value='${memberVO.tel }' required="required" style='width: 30%;' placeholder="전화번호"> 예) 010-0000-0000
@@ -98,7 +142,7 @@
     </div>   
  
     <div class="form-group">
-      <label class="col-md-2 control-label" style='font-size: 0.9em;'>우편번호</label>    
+      <label class="col-md-2 control-label" style='font-size: 0.9em;'>우편번호*</label>    
       <div class="col-md-10">
         <input type='text' class="form-control" name='zipcode' id='zipcode' 
                    value='${memberVO.zipcode }' required="required" style='width: 30%;' placeholder="우편번호">
@@ -107,7 +151,7 @@
     </div>  
  
     <div class="form-group">
-      <label class="col-md-2 control-label" style='font-size: 0.9em;'>주소</label>    
+      <label class="col-md-2 control-label" style='font-size: 0.9em;'>주소*</label>    
       <div class="col-md-10">
         <input type='text' class="form-control" name='address1' id='address1' 
                    value='${memberVO.address1 }' required="required" style='width: 80%;' placeholder="주소">
@@ -115,14 +159,14 @@
     </div>   
  
     <div class="form-group">
-      <label class="col-md-2 control-label" style='font-size: 0.9em;'>상세 주소</label>    
+      <label class="col-md-2 control-label" style='font-size: 0.9em;'>상세 주소*</label>    
       <div class="col-md-10">
         <input type='text' class="form-control" name='address2' id='address2' 
                    value='${memberVO.address2 }' required="required" style='width: 80%;' placeholder="상세 주소">
       </div>
     </div>   
     
-    <label for="genre1" class="col-md-2 control-label" style='font-size: 0.9em;'>관심 장르 1</label>    
+    <label for="genre1" class="col-md-2 control-label" style='font-size: 0.9em;'>관심 장르 1*</label>    
       <div class="col-md-10">
         <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="액션" > 액션</label>&nbsp;&nbsp;
         <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="코미디"> 코미디</label>&nbsp;&nbsp;
@@ -131,7 +175,7 @@
         <label style="cursor: pointer;"><input type="radio" name="genre1" id="genre1" value="sf판타지"> sf판타지</label>&nbsp;&nbsp;
       </div>
 
-      <label for="genre2" class="col-md-2 control-label" style='font-size: 0.9em;'>관심 장르 2</label>    
+      <label for="genre2" class="col-md-2 control-label" style='font-size: 0.9em;'>관심 장르 2*</label>    
       <div class="col-md-10">
         <label style="cursor: pointer;"><input type="radio" name="genre2" id="genre2" value="액션" > 액션</label>&nbsp;&nbsp;
         <label style="cursor: pointer;"><input type="radio" name="genre2" id="genre2" value="코미디"> 코미디</label>&nbsp;&nbsp;
@@ -218,6 +262,7 @@
       <div class="col-md-offset-2 col-md-10">
         <button type="button" id='btn_update'  class="btn btn-primary btn-md">저장</button>
         <button type="button" onclick="history.go(-1);" class="btn btn-primary btn-md">취소</button>
+        <button type="button" id='btn_delete'  class="btn btn-primary btn-md">탈퇴</button>
  
       </div>
     </div>   

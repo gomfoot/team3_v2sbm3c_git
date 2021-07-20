@@ -182,91 +182,7 @@ public class MemberCont {
     
     return mav;
   }
-
-  /**
-   * 회원 삭제
-   * @param memberno
-   * @return
-   */
-  @RequestMapping(value="/member/delete.do", method=RequestMethod.GET)
-  public ModelAndView delete(int memberno){
-    ModelAndView mav = new ModelAndView();
-    
-    MemberVO memberVO = this.memberProc.read(memberno);
-    mav.addObject("memberVO", memberVO);
-    mav.setViewName("/member/delete"); // /member/delete.jsp
-    
-    return mav; // forward
-  }
  
-  /**
-   * 회원 삭제 처리
-   * @param memberVO
-   * @return
-   */
-  @RequestMapping(value="/member/delete.do", method=RequestMethod.POST)
-  public ModelAndView delete_proc(int memberno){
-    ModelAndView mav = new ModelAndView();
-    
-    // System.out.println("id: " + memberVO.getId());
-    MemberVO memberVO = this.memberProc.read(memberno);
-    
-    int cnt= memberProc.delete(memberno);
-    mav.addObject("cnt", cnt); // redirect parameter 적용
-    mav.addObject("mname", memberVO.getMname()); // redirect parameter 적용
-    mav.addObject("url", "delete_msg"); // delete_msg.jsp, redirect parameter 적용
-    
-    mav.setViewName("redirect:/member/msg.do");
-    
-    return mav;
-  }
-  
-  /**
-   * 패스워드를 변경합니다.
-   * @param memberno
-   * @return
-   */
-  @RequestMapping(value="/member/passwd_update.do", method=RequestMethod.GET)
-  public ModelAndView passwd_update(int memberno){
-    ModelAndView mav = new ModelAndView();
-    mav.setViewName("/member/passwd_update");
-    
-    return mav;
-  }
-  
-  /**
-   * 패스워드 변경 처리
-   * @param memberno 회원 번호
-   * @param current_passwd 현재 패스워드
-   * @param new_passwd 새로운 패스워드
-   * @return
-   */
-  @RequestMapping(value="/member/passwd_update.do", method=RequestMethod.POST)
-  public ModelAndView passwd_update(int memberno, String current_passwd, String new_passwd){
-    ModelAndView mav = new ModelAndView();
-    
-    // 현재 패스워드 검사
-    HashMap<Object, Object> map = new HashMap<Object, Object>();
-    map.put("memberno", memberno);
-    map.put("passwd", current_passwd);
-    
-    int cnt = memberProc.passwd_check(map);
-    int update_cnt = 0; // 변경된 패스워드 수
-    
-    if (cnt == 1) { // 현재 패스워드가 일치하는 경우
-      map.put("passwd", new_passwd); // 새로운 패스워드를 저장
-      update_cnt = memberProc.passwd_update(map); // 패스워드 변경 처리
-      mav.addObject("update_cnt", update_cnt);  // 변경된 패스워드의 갯수    
-    }
-
-    mav.addObject("cnt", cnt); // 패스워드 일치 여부
-    mav.addObject("url", "passwd_update_msg");
-    
-    mav.setViewName("redirect:/member/msg.do");
-    
-    return mav;
-  }
-
   
   /**
    * 로그아웃 처리
@@ -282,6 +198,20 @@ public class MemberCont {
     mav.addObject("url", "index"); // logout_msg.jsp, redirect parameter 적용
     
     mav.setViewName("redirect:/index.do"); // 새로고침 방지
+    
+    return mav;
+  }
+  /**
+   * 회원 삭제 처리
+   * @param memberVO
+   * @return
+   */
+  @RequestMapping(value="/member/delete.do", method=RequestMethod.POST)
+  public ModelAndView delete(MemberVO memberVO){
+    ModelAndView mav = new ModelAndView();
+    int memberno = memberVO.getMemberno();
+    int cnt= memberProc.delete(memberno);
+    mav.setViewName("redirect:/member/logout.do");
     
     return mav;
   }

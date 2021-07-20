@@ -9,8 +9,6 @@
 <meta name="viewport" content="user-scalable=yes, initial-scale=1.0, maximum-scale=3.0, width=device-width" /> 
 <title>NENFLIX</title>
 
-<link href="/css/style.css" rel="Stylesheet" type="text/css">
-
 <script type="text/JavaScript"
           src="http://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -120,8 +118,25 @@
       
       return false; // submit 중지
     }
+    var frm = $('#frm');  // id가 frm인 태그 검색
+    var id=$('#id',frm).val();
+    var passwd=$('#passwd',frm).val();
+    var mname=$('#mname',frm).val();
+    var tel=$('#tel',frm).val();
+    var zipcode=$('#zipcode',frm).val();
+    var address1=$('#address1',frm).val();
+    var address2=$('#address2',frm).val();
     var genre1 = $('input:radio[name="genre1"]:checked').val();
     var genre2 = $('input:radio[name="genre2"]:checked').val();
+    if($.trim(id).length == 0||$.trim(passwd).length == 0||$.trim(mname).length == 0||$.trim(tel).length == 0||$.trim(zipcode).length == 0||$.trim(address1).length == 0||$.trim(address2).length == 0){
+        msg = '입력 안하신 정보가 존재합니다.<br>';
+        msg+='전부 입력해주세요<br>';
+        $('#modal_content').attr('class', 'alert alert-danger'); // CSS 변경
+        $('#modal_title').html('정보 부재'); // 제목 
+        $('#modal_content').html(msg);  // 내용
+        $('#modal_panel').modal();         // 다이얼로그 출력
+        return false;
+        }
     if(genre1==genre2){
     	  msg = '입력된 장르가 같습니다.<br>';
         msg+='다르게 선택해 주세요<br>';
