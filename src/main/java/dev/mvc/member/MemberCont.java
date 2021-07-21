@@ -109,22 +109,6 @@ public class MemberCont {
     return mav;
   }
   
-  /**
-   * 새로고침을 방지하는 메시지 출력
-   * @param memberno
-   * @return
-   */
-  @RequestMapping(value="/member/msg.do", method=RequestMethod.GET)
-  public ModelAndView msg(String url){
-    ModelAndView mav = new ModelAndView();
-    
-    // 등록 처리 메시지: create_msg --> /member/create_msg.jsp
-    // 수정 처리 메시지: update_msg --> /member/update_msg.jsp
-    // 삭제 처리 메시지: delete_msg --> /member/delete_msg.jsp
-    mav.setViewName("/member/" + url); // forward
-    
-    return mav; // forward
-  }
 
   /**
   * 목록 출력 가능
@@ -210,6 +194,9 @@ public class MemberCont {
   public ModelAndView delete(MemberVO memberVO){
     ModelAndView mav = new ModelAndView();
     int memberno = memberVO.getMemberno();
+    //찜목록삭제
+    //qna삭제
+    //커뮤니티삭제
     int cnt= memberProc.delete(memberno);
     mav.setViewName("redirect:/member/logout.do");
     
@@ -339,16 +326,11 @@ public class MemberCont {
       response.addCookie(ck_passwd_save);
       // -------------------------------------------------------------------
       
-      
-      if (return_url.length() > 0) {   // ★
-        mav.setViewName("redirect:" + return_url);  
-      } else {
-        mav.setViewName("redirect:/index.do");
-      }
+      mav.setViewName("redirect:/index.do");
+
         
     } else {
-      mav.addObject("url", "login_fail_msg");
-      mav.setViewName("redirect:/member/msg.do"); 
+      mav.setViewName("redirect:/index.do"); 
     }
         
     return mav;
@@ -431,16 +413,11 @@ public class MemberCont {
       // -------------------------------------------------------------------
       
       
-      if (return_url.length() > 0) {   // ★
-        mav.setViewName("redirect:" + return_url);  
-      } else {
         mav.setViewName("redirect:/index.do");
-      }
+
         
     } else {
-      System.out.println("로그인 실패:"+count);
-      mav.addObject("url", "login_fail_msg");
-      mav.setViewName("redirect:/member/msg.do"); 
+      mav.setViewName("redirect:/index.do"); 
     }
         
     return mav;

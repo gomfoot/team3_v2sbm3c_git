@@ -128,6 +128,7 @@
     var address2=$('#address2',frm).val();
     var genre1 = $('input:radio[name="genre1"]:checked').val();
     var genre2 = $('input:radio[name="genre2"]:checked').val();
+    var params = '';
     if($.trim(id).length == 0||$.trim(passwd).length == 0||$.trim(mname).length == 0||$.trim(tel).length == 0||$.trim(zipcode).length == 0||$.trim(address1).length == 0||$.trim(address2).length == 0){
         msg = '입력 안하신 정보가 존재합니다.<br>';
         msg+='전부 입력해주세요<br>';
@@ -149,7 +150,34 @@
         return false;
         
     }
-    $('#frm').submit();
+    params = 'id=' + id;
+    $.ajax({
+        url: './checkID.do', // spring execute
+        type: 'get',  // post
+        cache: false, // 응답 결과 임시 저장 취소
+        async: true,  // true: 비동기 통신
+        dataType: 'json', // 응답 형식: json, html, xml...
+        data: params,      // 데이터
+        success: function(rdata) { // 서버로부터 성공적으로 응답이 온경우
+          // alert(rdata);
+          var msg = "";
+          
+          if (rdata.cnt > 0) {
+            $('#modal_content').attr('class', 'alert alert-danger'); // Bootstrap CSS 변경
+            msg = "이미 사용중인 ID 입니다.";
+            $('#btn_close').attr("data-focus", "id");  // id 입력으로 focus 이동
+            $('#modal_title').html('ID 중복 확인'); // 제목 
+            $('#modal_content').html(msg);        // 내용
+            $('#modal_panel').modal();              // 다이얼로그 출력
+          } else {
+        	  $('#frm').submit();
+          }
+        },
+        // Ajax 통신 에러, 응답 코드가 200이 아닌경우, dataType이 다른경우 
+        error: function(request, status, error) { // callback 함수
+          console.log(error);
+        }
+      });
   }
 </script>
 </head> 

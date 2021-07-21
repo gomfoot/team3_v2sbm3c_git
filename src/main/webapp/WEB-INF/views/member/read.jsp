@@ -37,10 +37,10 @@
       if($.trim(passwd).length == 0||$.trim(mname).length == 0||$.trim(tel).length == 0||$.trim(zipcode).length == 0||$.trim(address1).length == 0||$.trim(address2).length == 0){
     	    msg = '입력 안하신 정보가 존재합니다.<br>';
           msg+='전부 입력해주세요<br>';
-          $('#modal_content').attr('class', 'alert alert-danger'); // CSS 변경
-          $('#modal_title').html('정보 부재'); // 제목 
-          $('#modal_content').html(msg);  // 내용
-          $('#modal_panel').modal();         // 다이얼로그 출력
+          $('#modal_content2').attr('class', 'alert alert-danger'); // CSS 변경
+          $('#modal_title2').html('정보 부재'); // 제목 
+          $('#modal_content2').html(msg);  // 내용
+          $('#modal_panel2').modal();         // 다이얼로그 출력
           return false;
           }
       
@@ -49,10 +49,10 @@
 	        msg+='다르게 선택해 주세요<br>';
 	        msg+=$('#genre1').val();
 	        msg+= $('#genre2').val();
-	        $('#modal_content').attr('class', 'alert alert-danger'); // CSS 변경
-	        $('#modal_title').html('장르 일치 확인'); // 제목 
-	        $('#modal_content').html(msg);  // 내용
-	        $('#modal_panel').modal();         // 다이얼로그 출력
+	        $('#modal_content2').attr('class', 'alert alert-danger'); // CSS 변경
+	        $('#modal_title2').html('장르 일치 확인'); // 제목 
+	        $('#modal_content2').html(msg);  // 내용
+	        $('#modal_panel2').modal();         // 다이얼로그 출력
 	        return false;
 	        
 	    }else{
@@ -81,7 +81,7 @@
  
 <body style="background-color:#000000; color:white;">
 <jsp:include page="../menu/top.jsp" flush='false' />
- <!-- ******************** Modal 알림창 시작 ******************** -->
+ <!-- ******************** 삭제 Modal 알림창 시작 ******************** -->
   <div id="modal_panel" class="modal fade"  role="dialog">
     <div class="modal-dialog">
       <!-- Modal content-->
@@ -99,6 +99,28 @@
                       data-dismiss="modal">확인</button>
           <button type="button" id="btn_close" data-focus="" class="btn btn-default" 
                       data-dismiss="modal">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ******************** Modal 알림창 종료 ******************** -->
+  
+  <!-- ******************** Modal 알림창 시작 ******************** -->
+  <div id="modal_panel2" class="modal fade"  role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h4 class="modal-title2" id='modal_title2'></h4><!-- 제목 -->
+        </div>
+        <div class="modal-body">
+          <p id='modal_content2'></p>  <!-- 내용 -->
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" data-focus="" class="btn btn-default" 
+                      data-dismiss="modal">확인</button>
         </div>
       </div>
     </div>
