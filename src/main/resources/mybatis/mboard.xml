@@ -8,8 +8,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="dev.mvc.mboard.MboardDAOInter">
 
 <insert id="create" parameterType="dev.mvc.mboard.MboardVO">
-  INSERT INTO mboard(mboardno,title,content,rdate,cnt,memberno)
-  VALUES(mboard_seq.nextval,#{title},#{content},sysdate,#{cnt},#{memberno})
+  INSERT INTO mboard(mboardno,title,content,rdate,cnt,memberno,mtype)
+  VALUES(mboard_seq.nextval,#{title},#{content},sysdate,#{cnt},#{memberno},#{mtype})
 </insert>
 
 <select id="search_count" resultType="int" parameterType="int">
@@ -18,11 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   </select>
   
   <select id="list_all" resultType="dev.mvc.mboard.MboardVO" parameterType="HashMap">
-    SELECT mboardno, title, rdate,  cnt, mname,r
+    SELECT mboardno, title, rdate,  cnt, mname,mtype,r
    FROM (
-              SELECT mboardno, title, rdate, cnt, mname ,rownum as r
+              SELECT mboardno, title, rdate, cnt, mname,mtype ,rownum as r
               FROM (
-                        SELECT b.mboardno, b.title, b.rdate, b.cnt, m.mname
+                        SELECT b.mboardno, b.title, b.rdate, b.cnt, m.mname,b.mtype
                         FROM mboard b, member m
                         where b.memberno = m.memberno
                         ORDER BY mboardno DESC

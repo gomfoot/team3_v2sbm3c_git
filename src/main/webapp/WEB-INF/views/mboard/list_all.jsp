@@ -17,15 +17,16 @@
 </script>
 
 </head>
-<body>
+<body style="background-color:#000000; color:white;">
  <jsp:include page="../menu/top.jsp" />
 
 
   <DIV class='menu_line'></DIV>
   
-  <table class="table table-striped" style='width: 100%;'>
+  <table class="table table-dark" style='width: 100%;'>
     <colgroup>
-      <col style="width: 60%;"></col>
+      <col style="width: 10%;"></col>
+      <col style="width: 50%;"></col>
       <col style="width: 15%;"></col>
       <col style="width: 15%;"></col>
       <col style="width: 10%;"></col>
@@ -33,6 +34,7 @@
     
     <thread>
     <TR>
+      <TH>게시판종류 </TH>
       <TH>제목 </TH>
       <TH>작성자 </TH>
       <TH>작성일 </TH>
@@ -48,7 +50,9 @@
         <c:set var="rdate" value="${mboardVO.rdate }" />
         <c:set var="cnt" value="${mboardVO.cnt }" />
         <c:set var="mname" value="${mboardVO.mname }" />
+        <c:set var="mtype" value="${mboardVO.mtype }" />
         <tr> 
+          <td class="td_bs">${mtype }</td>
           <td class="td_bs"><A href="./mboard_read.do?mboardno=${mboardno }&now_page=${now_page }">${title }</A></td>
           <td class="td_bs">${mname }</td>
           <td class="td_bs">${rdate }</td>
@@ -59,7 +63,7 @@
     </tbody>
   </table>
 <div style="margin:auto; width:3%;">
-                <ASIDE class="aside_right">
+                <ASIDE>
                   <button type='button' onclick="location='/mboard/create.do?memberno=${memberno}'" class="btn btn-info">등록</button>
                 </ASIDE> 
   </div>

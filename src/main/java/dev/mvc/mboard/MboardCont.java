@@ -97,6 +97,7 @@ public class MboardCont {
     @RequestParam(value = "now_page", defaultValue = "1") int now_page,
     HttpServletRequest request) {
 
+    
   ModelAndView mav = new ModelAndView();
   if(now_page<0) {
     now_page=1;
@@ -140,10 +141,11 @@ public class MboardCont {
     mav.addObject("mboardVO", mboardVO); // request.setAttribute("contentsVO", contentsVO);
     this.mboardProc.cnt_update(mboardno);
     
-    int memberno = (int)session.getAttribute("memberno"); 
-    MemberVO memberVO = this.memberProc.read(memberno);
-    mav.addObject("memberVO",memberVO);
-    
+    if(session.getAttribute("memberno")!=null) {
+      int memberno = (int)session.getAttribute("memberno"); 
+      MemberVO memberVO = this.memberProc.read(memberno);
+      mav.addObject("memberVO",memberVO);
+    }
     mav.setViewName("/mboard/mboard_read"); // /WEB-INF/views/contents/read.jsp
     
     List<Mboard_replyVO> reply_list = this.mboard_replyProc.list(mboardVO.getMboardno());

@@ -62,7 +62,7 @@ $(function() { // 자동 실행
 </script>
  
 </head> 
- 
+ <body style="background-color:#000000; color:white;">
 <jsp:include page="../menu/top.jsp" flush='false' />
       <c:forEach var="qnaVO" items="${list }">
         <c:set var="qnano" value="${qnaVO.qnano }" />
@@ -74,7 +74,7 @@ $(function() { // 자동 실행
         <br><br>
         </c:forEach>
  <DIV>
-  <fieldset class="fieldset_basic">
+  <fieldset>
     <ul>
         <div style="font-size:2.5em "> ${qnaVO.title }</div>
         <p style="text-align:left;" >등록일&nbsp; &nbsp;${qnaVO.rdate }</p>
@@ -89,7 +89,7 @@ $(function() { // 자동 실행
 <div style="margin:auto0; ">
             <c:choose>
                <c:when test="${sessionScope.memberno == qnaVO.memberno}">
-                <ASIDE class="aside_right">
+                <ASIDE>
                   <button type='button' onclick="location='/qna/delete.do?qnano=${qnaVO.qnano }'" class="btn btn-info">삭제</button>
                 </ASIDE> 
                 </c:when>
@@ -112,7 +112,7 @@ $(function() { // 자동 실행
         </li>
          <c:choose>
                <c:when test="${sessionScope.grade =='admin'}">
-                <ASIDE class="aside_right">
+                <ASIDE>
          <button type='button' onclick="location='/answer/delete.do?answerno=${answerVO.answerno }&qnano=${answerVO.qnano}'" class="btn btn-info">삭제</button>
            </ASIDE> 
                 </c:when>
@@ -121,7 +121,7 @@ $(function() { // 자동 실행
           
             <c:choose>
                <c:when test="${sessionScope.grade =='admin'}">
-                <ASIDE class="aside_right">
+                <ASIDE>
                         <FORM name='frm' id='frm' method='POST' action='/answer/create.do'>
                             <input type='hidden' name='qnano' id='qnano' value='${qnaVO.qnano }'>
                             <input type='hidden' name='adminno' id='adminno' value='${adminno }'>           

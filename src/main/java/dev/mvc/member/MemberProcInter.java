@@ -85,6 +85,8 @@ public interface MemberProcInter {
    */
   public int adminno(String id);
   
+  public MemberVO choose(int memberno);
+  
 }
 
 

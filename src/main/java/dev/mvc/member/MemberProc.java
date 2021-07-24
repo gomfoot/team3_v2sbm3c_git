@@ -93,6 +93,12 @@ public class MemberProc implements MemberProcInter {
     MemberVO memberVO = this.memberDAO.readById(id);
     return memberVO;
   }
+  
+  @Override
+  public MemberVO choose(int memberno) {
+     MemberVO memberVO = this.memberDAO.read(memberno);
+     return memberVO;
+  }
 
 }
 

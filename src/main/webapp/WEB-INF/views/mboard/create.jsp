@@ -33,7 +33,7 @@
  
 </head> 
  
-<body>
+<body style="background-color:#000000; color:white;">
 <jsp:include page="../menu/top.jsp" flush='false' />
   
   
@@ -56,8 +56,20 @@
          <textarea name='content' id='content' required="required" class="form-control" rows="12" style='width: 100%;'></textarea>
        </div>
     </div>
+    
+    <div class="form-group">
+       <label class="control-label col-md-2">게시판선택</label>
+       <div class="col-md-10">
+         <select name="mtype" id="mtype" required="required" style='width: 100%;'>
+            <option value="">게시판종류</option>
+            <option value="건의">건의</option>
+            <option value="리뷰">리뷰</option>
+            <option value="잡담">잡담</option>
+         </select>
+       </div>
+    </div>
   
-    <div class="content_body_bottom">
+    <div >
       <button type="submit" class="btn btn-primary">등록</button>
       <button type="button" onclick="location.href='./list_all.do'" class="btn btn-primary">목록</button>
     </div>

@@ -18,7 +18,7 @@
                     ${sessionScope.id }
               </c:when>
               <c:otherwise>
-                    <A  href='/member/read.do?memberno=${sessionScope.memberno }' style="font-size:1.6em; color:yellow; text-decoration: none; ">${sessionScope.id }</A> 
+                    <A  href='/member/choose.do?memberno=${sessionScope.memberno }' style="font-size:1.6em; color:yellow; text-decoration: none; ">${sessionScope.id }</A> 
               </c:otherwise>      
             </c:choose>    
           <A class='menu_link'  href='/member/logout.do' >Logout </A><span class='top_menu_sep'> </span>

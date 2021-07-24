@@ -17,13 +17,13 @@
 </script>
 
 </head>
-<body>
+<body style="background-color:#000000; color:white;">
  <jsp:include page="../menu/top.jsp" />
 
 
   <DIV class='menu_line'></DIV>
   
-  <table class="table table-striped" style='width: 100%;'>
+  <table class="table table-dark" style='width: 100%;'>
     <colgroup>
       <col style="width: 20%;"></col>
       <col style="width: 50%;"></col>
@@ -65,7 +65,7 @@
     <div style="margin:auto; width:3%;">
      <c:choose>
                <c:when test="${sessionScope.memberno != null}">
-                <ASIDE class="aside_right">
+                <ASIDE>
                   <button type='button' onclick="location='/qna/create.do?memberno=${memberno}'" class="btn btn-info">등록</button>
                 </ASIDE> 
                 </c:when>

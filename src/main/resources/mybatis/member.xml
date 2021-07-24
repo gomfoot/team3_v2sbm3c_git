@@ -86,6 +86,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     WHERE id=#{id} AND passwd=#{passwd}
   </select>
 
+<select id="choose" resultType="dev.mvc.member.MemberVO" parameterType="int">
+    SELECT memberno, id, passwd, mname, tel, zipcode, address1, address2, mdate, genre1, genre2
+    FROM member
+    WHERE memberno = #{memberno}
+  </select>  
             
 </mapper> 
 

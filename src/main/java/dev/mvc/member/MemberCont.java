@@ -439,6 +439,17 @@ public class MemberCont {
         
     return mav;
   }
+  @RequestMapping(value="/member/choose.do", method=RequestMethod.GET)
+  public ModelAndView choose(int memberno){
+    ModelAndView mav = new ModelAndView();
+    
+    MemberVO memberVO = this.memberProc.read(memberno);
+    mav.addObject("memberVO", memberVO);
+    mav.setViewName("/member/choose"); // /member/read.jsp
+    
+    return mav; // forward
+  }
+  
   
  
 }

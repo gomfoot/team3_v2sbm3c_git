@@ -18,9 +18,17 @@ public class MboardVO {
   private int cnt;
   private int memberno;
   private String mname;
+  private String mtype;
+  
   
   public String getMname() {
     return mname;
+  }
+  public String getMtype() {
+    return mtype;
+  }
+  public void setMtype(String mtype) {
+    this.mtype = mtype;
   }
   public void setMname(String mname) {
     this.mname = mname;

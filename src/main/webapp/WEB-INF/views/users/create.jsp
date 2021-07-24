@@ -57,7 +57,7 @@ function checkmemberno(){
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
-<body>
+<body style="background-color:#000000; color:white;">
  <jsp:include page="../menu/top.jsp" flush='false' />
  
   <!-- ******************** Modal 알림창 시작 ******************** -->
@@ -86,18 +86,18 @@ function checkmemberno(){
  <DIV class='menu_line'></DIV>
   
   <FORM name='frm' id='frm' method='POST' action='./create.do' class="form-horizontal"
-              enctype="multipart/form-data">
+              enctype="multipart/form-data"style="margin-left:500px">
   <input type="hidden" id ="memberno"name="memberno" value="${sessionScope.memberno }"> 
-       <label class="control-label col-md-2">금액 선택</label>
+       <label class="control-label col-md-2"style="margin-left:200px">금액 선택</label>
       <div class="form-group">
        <div class="col-md-10">
-         <input type='radio' name='addday' id='addday' value=30 required="required"><label for="basic"><img src='/users/images/basic.png' style='width: 50%;'> 1개월</label>
-         <input type='radio' name='addday' id='addday' value=185 required="required"><label for="nomal"><img src='/users/images/nomal.png' style='width: 50%;'> 6개월</label>
-         <input type='radio' name='addday' id='addday' value=365 required="required"><label for="premium"><img src='/users/images/premium.png' style='width: 50%;'> 1년</label>
+         <input type='radio' name='addday' id='addday' value=30 required="required"><label for="basic"><img src='/images/basic.png' style='width: 50%;'> 1개월</label>
+         <input type='radio' name='addday' id='addday' value=185 required="required"><label for="nomal"><img src='/images/nomal.png' style='width: 50%;'> 6개월</label>
+         <input type='radio' name='addday' id='addday' value=365 required="required"><label for="premium"><img src='/images/premium.png' style='width: 50%;'> 1년</label>
        </div>
     </div>
               
-
+<br><br><br><br><br><br><br><br><br>
  
  <div class='menu_line'></div>
   <div style=" text-align: left;">
@@ -108,7 +108,7 @@ function checkmemberno(){
     <label style="cursor: pointer;"><input type="radio" name="paytype" id="paytype" value="직접 입금"> 직접 입금</label>&nbsp;&nbsp;
   </div>
   
-  <button type='button' id='btn_check' style='font-size: 1.5em;'>결재하기</button>
+  <button type='button' id='btn_check' style='font-size: 1.5em;'class="btn btn-info">결재하기</button>
      </FORM>
 <jsp:include page="../menu/bottom.jsp" flush='false' />
               

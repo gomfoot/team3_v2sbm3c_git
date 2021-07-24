@@ -33,7 +33,7 @@
  
 </head> 
  
-<body>
+<body style="background-color:#000000; color:white;">
 <jsp:include page="../menu/top.jsp" flush='false' />
   
   

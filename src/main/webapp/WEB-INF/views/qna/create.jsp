@@ -33,7 +33,7 @@
  
 </head> 
  
-<body>
+<body style="background-color:#000000; color:white;">
 <jsp:include page="../menu/top.jsp" flush='false' />
   
   
@@ -70,7 +70,7 @@
        </div>
     </div>
   
-    <div class="content_body_bottom">
+    <div >
       <button type="submit" class="btn btn-primary">등록</button>
       <button type="button" onclick="location.href='./list_all.do'" class="btn btn-primary">목록</button>
     </div>
