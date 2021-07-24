@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace = "dev.mvc.favorites.FavoritesDAOInter">
+  <insert id="create" parameterType="dev.mvc.favorites.FavoritesVO">
+    INSERT INTO favorites(favoritesno, movieno, memberno)
+    VALUES(favorites_seq.nextval, #{movieno}, #{memberno})
+  </insert>
+  
+  <!-- 회원별 검색 레코드 갯수 -->
+  <select id="search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM favorites
+    WHERE memberno=#{memberno}
+  </select>
+
+  <!-- memberno 회원 번호별 찜 목록 + 페이징 + 메인 이미지 -->   
+  <select id="list_favorites" resultType="dev.mvc.favorites.FavoritesVO" parameterType="HashMap">
+   SELECT favoritesno, movieno, mtitle, imgthumb1, imgsize1, memberno, r
+   FROM (
+              SELECT favoritesno, movieno, mtitle, imgthumb1, imgsize1, memberno, rownum as r
+              FROM (
+                        SELECT f.favoritesno, mv.movieno, mv.mtitle, mv.imgthumb1, mv.imgsize1, f.memberno 
+                        FROM favorites f, movie mv
+                        WHERE (mv.movieno = f.movieno) AND f.memberno = #{memberno}
+                        ORDER BY favoritesno DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+  </select>
+  
+
+  <delete id="delete" parameterType="int">
+      DELETE FROM favorites
+      WHERE favoritesno=#{favoritesno}
+  </delete>
+  
+  <select id="favorites_check" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM favorites
+    WHERE memberno=#{memberno} AND movieno=#{movieno}
+  </select>
+            
+</mapper> 
+

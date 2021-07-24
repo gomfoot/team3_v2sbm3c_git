@@ -18,12 +18,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import dev.mvc.users.UsersProcInter;
  
 @Controller
 public class MemberCont {
   @Autowired
   @Qualifier("dev.mvc.member.MemberProc")
   private MemberProcInter memberProc;
+  
+  @Autowired
+  @Qualifier("dev.mvc.users.UsersProc")
+  private UsersProcInter usersProc;
   
   public MemberCont(){
     System.out.println("-> MemberCont created.");
@@ -277,10 +283,20 @@ public class MemberCont {
     map.put("id", id);
     map.put("passwd", passwd);
     int count = memberProc.login(map);
+    
+    
+    
     if (count == 1) { // 로그인 성공
       //System.out.println(id + " 로그인 성공");
       MemberVO memberVO = memberProc.readById(id);
       session.setAttribute("memberno", memberVO.getMemberno()); // 서버의 메모리에 기록
+      int users_check = usersProc.checkmemberno(memberVO.getMemberno());
+      if(users_check >= 1 ) {
+        session.setAttribute("pay_exist",1);
+      }else {
+        session.setAttribute("pay_exist",0);
+      }
+      
       session.setAttribute("id", id);
       session.setAttribute("mname", memberVO.getMname());
       session.setAttribute("grade","member");
@@ -370,6 +386,7 @@ public class MemberCont {
       session.setAttribute("id", id);
       session.setAttribute("grade","admin");
       session.setAttribute("adminno", adminno);
+      session.setAttribute("pay_exist", 1);
       // -------------------------------------------------------------------
       // id 관련 쿠기 저장
       // -------------------------------------------------------------------

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.mgenre.MgenreDAOInter">
+
+  <insert id="create" parameterType="dev.mvc.mgenre.MgenreVO">
+    INSERT INTO mgenre(mgenreno, mgenrename, cnt)
+    VALUES(mgenre_seq.nextval, #{mgenrename}, 0)
+  </insert> 
+  
+  <!-- 
+  레코드 갯수 만큼 MgenreVO 객체를 만들어 ArrayList에 저장하여 리턴,
+  List<MgenreVO> list = new ArrayList<MgenreVO>(); 
+  -->
+  <select id="list_mgenreno_asc" resultType="dev.mvc.mgenre.MgenreVO">
+    SELECT  mgenreno, mgenrename, cnt
+    FROM mgenre
+    ORDER BY mgenreno ASC
+  </select>
+  
+  <!-- 조회, id: read, 입력: mgenreno, 리턴: MgenreVO -->
+  <select id="read" resultType="dev.mvc.mgenre.MgenreVO" parameterType="int">
+    SELECT  mgenreno, mgenrename, cnt
+    FROM mgenre
+    WHERE mgenreno=#{mgenreno}
+  </select>
+
+  <!-- 수정, id: update, 입력: MgenreVO, 리턴: int -->
+  <update id="update" parameterType="dev.mvc.mgenre.MgenreVO">
+    UPDATE mgenre
+    SET mgenrename=#{mgenrename}
+    WHERE mgenreno = #{mgenreno}
+  </update>
+
+  <!-- 삭제 처리, id=delete, 입력: PK, 리턴: 삭제된 갯수 int -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM mgenre
+    WHERE mgenreno=#{mgenreno}
+  </delete>
+  
+  <!-- genre1의 mgenreno 조회 -->
+  <select id="read_genre1" resultType="int" parameterType="String">
+    SELECT mgenre.mgenreno 
+    FROM mgenre
+    WHERE mgenre.mgenrename = (SELECT member.genre1
+                                                   FROM member
+                                                   WHERE member.id = #{id})
+  </select>
+  
+  <!-- genre2의 mgenreno 조회 -->
+  <select id="read_genre2" resultType="int" parameterType="String">
+    SELECT mgenre.mgenreno 
+    FROM mgenre
+    WHERE mgenre.mgenrename = (SELECT member.genre2
+                                                   FROM member
+                                                   WHERE member.id = #{id})
+  </select>
+  
+  <!-- 장르별 영화 수 증가 -->
+  <update id="update_cnt_up" parameterType="int">
+    UPDATE mgenre
+    SET cnt = cnt + 1
+    WHERE mgenreno = #{mgenreno}
+  </update>
+  
+  <!-- 장르별 영화 수 감소 -->
+  <update id="update_cnt_down" parameterType="int">
+    UPDATE mgenre
+    SET cnt = cnt - 1
+    WHERE mgenreno = #{mgenreno}
+  </update>
+  
+  <!-- 조회, id: read, 입력: mgenreno, 리턴: MgenreVO -->
+  <select id="read_name" resultType="String" parameterType="int">
+    SELECT  mgenrename
+    FROM mgenre
+    WHERE mgenreno=#{mgenreno}
+  </select>
+  
+</mapper>
+
+
+
+

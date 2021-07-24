@@ -80,6 +80,7 @@ public interface MemberDAOInter {
    * adminno 번호 가져오기
    */
   public int adminno(String id);
+  
 }
 
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+  
+<mapper namespace="dev.mvc.answer.AnswerDAOInter">
+
+<insert id="create" parameterType="dev.mvc.answer.AnswerVO">
+  INSERT INTO answer(answerno,qnano,content,rdate,adminno)
+  VALUES(answer_seq.nextval,#{qnano},#{content},sysdate,#{adminno})
+</insert>
+
+<select id="list" resultType="dev.mvc.answer.AnswerVO">
+  SELECT answerno,qnano,content, rdate, adminno
+  FROM answer
+  WHERE qnano=#{qnano}
+</select>
+
+<delete id ="delete" parameterType="int">
+  DELETE FROM answer
+  WHERE answerno=#{answerno}
+</delete>
+
+
+</mapper>

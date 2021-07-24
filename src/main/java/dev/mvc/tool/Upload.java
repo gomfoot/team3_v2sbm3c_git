@@ -366,12 +366,12 @@ public class Upload extends HttpServletRequestWrapper {
         
         InputStream inputStream = null;
         OutputStream outputStream = null;
- 
+    
         try {
             if( fileSize > 0 ) { // 파일이 존재한다면
                 // 인풋 스트림을 얻는다.
                 inputStream = multipartFile.getInputStream();
- 
+    
                 File oldfile = new File(absPath, originalFileName);
             
                 if ( oldfile.exists()){  // 같은 파일명이 존재한다면, 파일명에 일련번호 추가 작업
@@ -390,6 +390,72 @@ public class Upload extends HttpServletRequestWrapper {
                 }else{
                     fileName = originalFileName;
                 }
+                //make server full path to save
+                String serverFullPath = absPath + "/" + fileName;
+                
+                // System.out.println("업로드 후 fileName: " + fileName);
+                // System.out.println("업로드 후 serverFullPath: " + serverFullPath);
+                
+                outputStream = new FileOutputStream( serverFullPath );
+    
+                // 버퍼를 만든다.
+                int readBytes = 0;
+                byte[] buffer = new byte[8192];
+    
+                while((readBytes = inputStream.read(buffer, 0, 8192)) != -1 ) {
+                    outputStream.write( buffer, 0, readBytes );
+                }
+                outputStream.close();
+                inputStream.close();
+                        
+            }
+    
+        } catch(Exception e) {
+            e.printStackTrace();  
+        }finally{
+            
+        }
+        
+        return fileName;
+    }
+
+    /**
+     * Spring framework에서의 파일 업로드
+     * 중복 파일명 처리: data.txt -> data_1.txt -> data_2.txt...  
+     * @param multipartFile 전송하려는 파일 객체
+     * @param absPath 저장할 절대 경로
+     * @param header 파일종류 (MP3, MP4, JPG)
+     * @return
+     */
+    public static String saveFileSpring_RND(MultipartFile multipartFile, String absPath, String header) {
+        // input form's parameter name
+        String fileName = "";
+        // original file name
+        String originalFileName = multipartFile.getOriginalFilename();
+        // file content type
+        String contentType = multipartFile.getContentType();
+        // file size
+        long fileSize = multipartFile.getSize();
+        
+        // System.out.println("fileSize: " + fileSize);
+        // System.out.println("originalFileName: " + originalFileName);
+        int ext_index = originalFileName.lastIndexOf(".");
+        String only_filename = originalFileName.substring(0,  ext_index); // 순수 파일명 추출, winter
+        String ext_filename = originalFileName.substring(ext_index); // 파일 확장자 추출, .jpg
+        
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+ 
+        try {
+            if( fileSize > 0 ) { // 파일이 존재한다면
+                // 인풋 스트림을 얻는다.
+                inputStream = multipartFile.getInputStream();
+ 
+                File oldfile = new File(absPath, originalFileName);
+            
+              
+               fileName = Tool.getDate_rnd(header)+ext_filename;
+               
                 //make server full path to save
                 String serverFullPath = absPath + "/" + fileName;
                 
@@ -418,6 +484,8 @@ public class Upload extends HttpServletRequestWrapper {
         
         return fileName;
     }
+    
+    
  
 }
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  
+<mapper namespace="dev.mvc.users.UsersDAOInter">
+
+<insert id="create" parameterType="dev.mvc.users.UsersVO">
+  INSERT INTO users(usersno,sdate,edate,memberno,paytype)
+  VALUES(users_seq.nextval,sysdate,sysdate+#{addday},#{memberno},#{paytype})
+</insert>
+
+<select id="checkmemberno" resultType="int" parameterType="int">
+    SELECT COUNT(memberno) as cnt
+    FROM users
+    WHERE memberno=#{memberno}
+  </select>
+
+
+</mapper>
+

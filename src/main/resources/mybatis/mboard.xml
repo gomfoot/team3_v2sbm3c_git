@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+  
+<mapper namespace="dev.mvc.mboard.MboardDAOInter">
+
+<insert id="create" parameterType="dev.mvc.mboard.MboardVO">
+  INSERT INTO mboard(mboardno,title,content,rdate,cnt,memberno)
+  VALUES(mboard_seq.nextval,#{title},#{content},sysdate,#{cnt},#{memberno})
+</insert>
+
+<select id="search_count" resultType="int" parameterType="int">
+    SELECT COUNT(*) as cnt
+    FROM mboard
+  </select>
+  
+  <select id="list_all" resultType="dev.mvc.mboard.MboardVO" parameterType="HashMap">
+    SELECT mboardno, title, rdate,  cnt, mname,r
+   FROM (
+              SELECT mboardno, title, rdate, cnt, mname ,rownum as r
+              FROM (
+                        SELECT b.mboardno, b.title, b.rdate, b.cnt, m.mname
+                        FROM mboard b, member m
+                        where b.memberno = m.memberno
+                        ORDER BY mboardno DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+  </select>      
+  
+  <select id="read" resultType="dev.mvc.mboard.MboardVO" parameterType="int">
+    SELECT b.mboardno, b.title, b.content, b.rdate,  b.cnt, m.memberno
+    FROM mboard b, member m
+    where b.mboardno=#{mboardno} AND m.memberno=b.memberno
+    </select>
+    
+    <delete id="delete" parameterType="int">
+      DELETE FROM mboard
+      WHERE mboardno=#{mboardno}
+    </delete>
+    
+    <update id="update" parameterType="dev.mvc.mboard.MboardVO">
+      UPDATE mboard
+      SET title=#{title}, content=#{content}
+      WHERE mboardno=#{mboardno}
+    </update>
+    
+    <update id="cnt_update" parameterType="int">
+      UPDATE mboard
+      SET cnt=cnt+1
+      WHERE mboardno=#{mboardno}
+    </update>
+
+    
+</mapper>

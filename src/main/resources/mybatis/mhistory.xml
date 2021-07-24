@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  
+<mapper namespace="dev.mvc.mhistory.MhistoryDAOInter">
+
+<insert id="create_mhistory" parameterType="HashMap">
+  INSERT INTO mhistory(mhistoryno, movieno, memberno, hcnt, rdate)
+  VALUES(mhistory_seq.nextval, #{movieno}, #{memberno}, 1, sysdate)
+</insert>
+
+  <select id="mhistory_check" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM mhistory
+    WHERE movieno=#{movieno} AND memberno=#{memberno}
+  </select>
+  
+  <update id="update_mhistory" parameterType="HashMap">
+    UPDATE mhistory
+    SET hcnt = hcnt + 1, rdate = sysdate
+    WHERE movieno=#{movieno} AND memberno=#{memberno}
+  </update>
+  
+  <!-- 회원별 검색 레코드 갯수 -->
+  <select id="search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM favorites
+    WHERE memberno=#{memberno}
+  </select>
+
+  <!-- memberno 회원 번호별 찜 목록 + 페이징 + 메인 이미지 -->   
+  <select id="list_mhistory" resultType="dev.mvc.mhistory.MhistoryVO" parameterType="HashMap">
+   SELECT mhistoryno, movieno, mtitle, imgthumb1, imgsize1, memberno, r
+   FROM (
+              SELECT mhistoryno, movieno, mtitle, imgthumb1, imgsize1, memberno, rownum as r
+              FROM (
+                        SELECT h.mhistoryno, mv.movieno, mv.mtitle, mv.imgthumb1, mv.imgsize1, h.memberno 
+                        FROM mhistory h, movie mv
+                        WHERE (mv.movieno = h.movieno) AND h.memberno = #{memberno}
+                        ORDER BY h.rdate DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+  </select>
+  
+  <!-- 장르 영화 목록 -->
+  <select id="list_sort" resultType="dev.mvc.mhistory.MhistoryVO" parameterType="int">
+    SELECT movieno
+    FROM mhistory
+    WHERE memberno=#{memberno}
+    ORDER BY hcnt DESC, rdate DESC
+  </select> 
+  
+</mapper>
+

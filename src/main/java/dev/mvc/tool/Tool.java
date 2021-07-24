@@ -7,6 +7,7 @@ import java.awt.image.PixelGrabber;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -327,6 +328,22 @@ public class Tool {
     return date;
   }
   
+  
+  /**
+   * MP4_20210723-154253_6995 형식의 날짜를 리턴합니다.
+   * @return MP4_20210723-154253_6995 형식의 문자열 리턴
+   */
+  public static String getDate_rnd(String header){
+      SimpleDateFormat sd = new SimpleDateFormat("yyyyMMdd-HHmmss");
+      
+      String date = sd.format(new Date());
+ 
+      Random rnd = new Random();
+      int rnd_val = rnd.nextInt(100000);
+      date = header+"_" + date + "_"+rnd_val;
+        
+      return date;
+  }
   
 }
 

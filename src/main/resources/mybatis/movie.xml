@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="dev.mvc.movie.MovieDAOInter"> 
+  <insert id="create" parameterType="dev.mvc.movie.MovieVO">
+    INSERT INTO movie(movieno, mgenreno, mtitle, mcontent, mtime, 
+                            director, caster, viewclass, mdate, rdate,
+                            imgfile1, imgthumb1, imgsize1, videofile1, videosize1)
+    VALUES(movie_seq.nextval, #{mgenreno}, #{mtitle}, #{mcontent}, #{mtime},
+                #{director}, #{caster}, #{viewclass}, #{mdate}, sysdate,
+                #{imgfile1}, #{imgthumb1}, #{imgsize1}, #{videofile1}, #{videosize1})
+  </insert>
+
+  <!-- 장르별 검색 레코드 갯수 -->
+  <select id="search_count" resultType="int" parameterType="HashMap">
+    SELECT COUNT(*) as cnt
+    FROM movie
+    <choose>
+      <when test="word == null or word == ''"> <!-- 검색하지 않는 경우의 레코드 갯수 -->
+        WHERE mgenreno=#{mgenreno}
+      </when>
+      <otherwise> <!-- 검색하는 경우의 레코드 갯수 -->
+        WHERE mgenreno=#{mgenreno} AND (mtitle LIKE '%' || #{word} || '%' 
+                                                       OR mcontent LIKE '%' || #{word} || '%' )
+      </otherwise>
+    </choose>
+  </select>
+      
+  <!-- 장르별 검색 목록 + 페이징 + 메인 이미지 -->   
+  <select id="list_search_paging" 
+             resultType="dev.mvc.movie.MovieVO" parameterType="HashMap">
+   SELECT movieno, mgenreno, mtitle, mcontent, mtime, 
+                            director, caster, viewclass, mdate, goodscore, hatescore, mcnt, rdate,
+                            imgfile1, imgthumb1, imgsize1, videofile1, videosize1, r
+   FROM (
+              SELECT movieno, mgenreno, mtitle, mcontent, mtime, 
+                            director, caster, viewclass, mdate, goodscore, hatescore, mcnt, rdate,
+                            imgfile1, imgthumb1, imgsize1, videofile1, videosize1, rownum as r
+              FROM (
+                        SELECT movieno, mgenreno, mtitle, mcontent, mtime, 
+                            director, caster, viewclass, mdate, goodscore, hatescore, mcnt, rdate,
+                            imgfile1, imgthumb1, imgsize1, videofile1, videosize1
+                        FROM movie
+                        <choose>
+                          <when test="word == null or word == ''"> <!-- 검색하지 않는 경우 -->
+                             WHERE mgenreno=#{mgenreno}
+                          </when>
+                          <otherwise>
+                            WHERE mgenreno=#{mgenreno} AND (mtitle LIKE '%' || #{word} || '%'  <!-- ||: 결합, %첫눈% -->
+                                                                  OR mcontent LIKE '%' || #{word} || '%' )
+                          </otherwise>
+                        </choose>
+                        ORDER BY movieno DESC
+               )
+    )
+    WHERE <![CDATA[ r >= #{start_num} AND r <= #{end_num} ]]>
+     
+<!--  1 page: WHERE r >= 1 AND r <= 10; 
+       2 page: WHERE r >= 11 AND r <= 20;
+       3 page: WHERE r >= 21 AND r <= 30; -->
+     
+  </select>
+         
+  <!-- 영화 상세정보 조회 -->
+  <select id="read" resultType="dev.mvc.movie.MovieVO" parameterType="int">
+    SELECT movieno, mgenreno, mtitle, mcontent, mtime, 
+                            director, caster, viewclass, mdate, goodscore, hatescore, mcnt, rdate,
+                            imgfile1, imgthumb1, imgsize1, videofile1, videosize1
+    FROM movie
+    WHERE movieno = #{movieno}
+  </select> 
+  
+  <!-- 영화 정보 수정 -->
+  <update id="update_text" parameterType="dev.mvc.movie.MovieVO">
+    UPDATE movie
+    SET mtitle=#{mtitle}, mcontent=#{mcontent},  mtime=#{mtime}, director=#{director}, caster=#{caster}, viewclass=#{viewclass}, mdate=#{mdate}
+    WHERE movieno = #{movieno}
+  </update>
+  
+  <!-- 영화 파일 수정 -->
+  <update id="update_file" parameterType="dev.mvc.movie.MovieVO">
+    UPDATE movie
+    SET imgfile1=#{imgfile1}, imgthumb1=#{imgthumb1}, imgsize1=#{imgsize1}, videofile1=#{videofile1}, videosize1=#{videosize1} 
+    WHERE movieno = #{movieno}
+  </update>
+
+  <!-- 영화 삭제 -->
+  <delete id="delete" parameterType="int">
+    DELETE FROM movie
+    WHERE movieno=#{movieno}
+  </delete>
+  
+  <!-- 조회수 증가 -->
+  <update id="update_mcnt" parameterType="int">
+    UPDATE movie
+    SET mcnt = mcnt +1
+    WHERE movieno = #{movieno}
+  </update>
+  
+  <!-- 인기 영화 목록  -->
+  <select id="list_popular" resultType="dev.mvc.movie.MovieVO" >
+     SELECT movieno, mtitle, imgfile1, imgthumb1, imgsize1
+      FROM (SELECT movieno, mtitle, imgfile1, imgthumb1, imgsize1, ROWNUM as r
+                FROM movie
+                ORDER BY mcnt DESC
+                )
+    WHERE <![CDATA[ r >= 0 AND r <= 4 ]]>
+  </select> 
+  
+  <!-- 최신 영화 목록 -->
+  <select id="list_latest" resultType="dev.mvc.movie.MovieVO" >    
+    SELECT movieno, mtitle, imgfile1, imgthumb1, imgsize1
+      FROM (SELECT movieno, mtitle, imgfile1, imgthumb1, imgsize1, ROWNUM as r
+                  FROM movie
+                  ORDER BY rdate DESC
+                )
+    WHERE <![CDATA[ r >= 0 AND r <= 4 ]]>
+  </select> 
+  
+  <!-- 장르 영화 목록 -->
+  <select id="list_genre" resultType="dev.mvc.movie.MovieVO" parameterType="int">
+    SELECT movieno, mtitle, imgfile1, imgthumb1, imgsize1
+      FROM (SELECT movieno, mgenreno, mtitle, imgfile1, imgthumb1, imgsize1, ROWNUM as r
+                  FROM movie
+                  WHERE mgenreno=#{mgenreno}
+                  ORDER BY mcnt DESC
+                )
+    WHERE <![CDATA[ r >= 0 AND r <= 4 ]]>
+  </select> 
+
+  <!-- 평점 -->
+  <insert id="create_mscore" parameterType="HashMap">
+    INSERT INTO mscore(mscoreno, movieno, memberno)
+    VALUES(mscore_seq.nextval, #{movieno}, #{memberno})
+  </insert>
+  
+  <select id="mscore_read" resultType="int" parameterType="HashMap">
+    SELECT score_check
+    FROM mscore
+    WHERE memberno=#{memberno} AND movieno=#{movieno}
+  </select>
+  
+   <select id="mscore_check" resultType="int" parameterType="HashMap">
+    SELECT COUNT(mscoreno) as cnt
+    FROM mscore
+    WHERE memberno=#{memberno} AND movieno=#{movieno}
+  </select>
+  <!-- 좋아요 -->
+  <update id="update_goodscore_up" parameterType="int">
+    UPDATE movie
+    SET goodscore = goodscore + 1
+    WHERE movieno = #{movieno}
+  </update>
+  
+  <update id="update_goodscore_down" parameterType="int">
+    UPDATE movie
+    SET goodscore = goodscore - 1
+    WHERE movieno = #{movieno}
+  </update>
+  <!-- 싫어요 -->
+  <update id="update_hatescore_up" parameterType="int">
+    UPDATE movie
+    SET hatescore = hatescore + 1
+    WHERE movieno = #{movieno}
+  </update>
+  
+  <update id="update_hatescore_down" parameterType="int">
+    UPDATE movie
+    SET hatescore = hatescore - 1
+    WHERE movieno = #{movieno}
+  </update>
+  
+  <update id="gscore_check" parameterType="HashMap">
+    UPDATE mscore
+    SET score_check = score_check +1
+    WHERE memberno=#{memberno} AND movieno=#{movieno}
+  </update>
+  
+  <update id="hscore_check" parameterType="HashMap">
+    UPDATE mscore
+    SET score_check = score_check +2
+    WHERE memberno=#{memberno} AND movieno=#{movieno}
+  </update>
+  
+  <update id="score_check_cancel" parameterType="HashMap">
+    UPDATE mscore
+    SET score_check = 0
+    WHERE memberno=#{memberno} AND movieno=#{movieno}
+  </update>
+
+  <!-- 평점 END-->
+  
+  <select id="genre_read" resultType="int" parameterType="int">
+    SELECT mgenreno
+    FROM movie
+    WHERE movieno=#{movieno}
+  </select>
+  
+</mapper> 

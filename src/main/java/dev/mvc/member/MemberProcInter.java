@@ -80,6 +80,9 @@ public interface MemberProcInter {
    */
   public int admin_login(Map<String, Object> map);
   
+  /**
+   * adminno 번호 가져오기
+   */
   public int adminno(String id);
   
 }
